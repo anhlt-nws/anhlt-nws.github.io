@@ -26,7 +26,7 @@
     <div id="casino">
       <div class="content">
         <div class="slotNumber">
-          <div id="casino1" class="slotMachine">
+          <div id="casino1" class="slotMachine" style="margin-left: -65px;">
             <div class="slot slot1"></div>
             <div class="slot slot2"></div>
             <div class="slot slot3"></div>
@@ -44,7 +44,7 @@
             <div class="slot slot9"></div>
             <div class="slot slot10"></div>
           </div>
-		      <div id="casino2Max" class="slotMachine">
+		  <div id="casino2Max" class="slotMachine">
             <div class="slot slot1"></div>
             <div class="slot slot2"></div>
             <div class="slot slot3"></div>
@@ -64,7 +64,7 @@
             <div class="slot slot9"></div>
             <div class="slot slot10"></div>
           </div>
-		      <div id="casino3Max" class="slotMachine">
+		  <div id="casino3Max" class="slotMachine">
             <div class="slot slot1"></div>
             <div class="slot slot2"></div>
             <div class="slot slot3"></div>
@@ -104,78 +104,67 @@
         delay: 500
       });
       const mCasino2 = new SlotMachine(casino2, {
-        active: 0,
+        active: 1,
         delay: 500
       });
       const mCasino2Max = new SlotMachine(casino2Max, {
-        active: 0,
+        active: 3,
         delay: 500
       });
       const mCasino3 = new SlotMachine(casino3, {
-        active: 0,
+        active: 2,
         delay: 500
       });
       const mCasino3Max = new SlotMachine(casino3Max, {
-        active: 0,
+        active: 4,
         delay: 500
       });
-    </script>
-    <script id="codeScript6">
-      let first = 0;
-      let second = 0;
-      let third = 0;
-      
-      function onFirst(val) {
-        console.log('first ', val);
-        first = val;
-        if (first === 2) {
-          // Hide default slot 2
-          casino2.style.display = "none";
-        } else {
-          // Hide slot 2 alter
-          casino2Max.style.display = "none";
-        }
-      };
-      
-      function onSecond(val) {
-        console.log('sec ', val);
-        second = val;
-        if (first === 2 && second === 4) {
-          // Hide default slot 3
-          casino3.style.display = "none";
-        } else {
-          // Hide slot 3 alter
-          casino3Max.style.display = "none";
-        }
-      };
-      
-      function onThird(val) {
-        console.log('third ', val);
-      }
-      
-      function resetView() {
-        casino2.style.display = "inline-block";
-        casino3.style.display = "inline-block";
-        casino2Max.style.display = "inline-block";
-        casino3Max.style.display = "inline-block";
-      }
-
-      function hideAlter() {
-        casino2Max.style.display = "none";
-        casino3Max.style.display = "none";
-      }
-      
+	</script>
+	<script id="codeScript6">
+	  let first = 0;
+	  let second = 0;
+	  let third = 0;
+	  let isSecondAlter = false;
+	  let isThirdAlter = false;
+	  
+	  function onFirst(val) {
+		console.log('first ', val);
+		first = val;
+		if (first !== 2) {
+			// Hide slot 3 alter
+			casino2Max.style.display = "none";
+		}
+	  };
+	  
+	  function onSecond(val) {
+		console.log('sec ', val);
+		second = val;
+		if (first !== 2 || second !== 4) {
+			// Hide slot 3 alter
+			casino3Max.style.display = "none";
+			isThirdAlter = true;
+		}
+	  };
+	  
+	  function onThird(val) {
+		console.log('third ', val);
+	  }
+	  
+	  function resetView() {
+		casino2Max.style.display = "inline-block";
+		casino3Max.style.display = "inline-block";
+	  }
+	  
       btnShuffle.addEventListener('click', () => {
-        resetView();
-        // hideAlter();
+		resetView();
         count = 3;
         mCasino1.shuffle(9999);
         mCasino2.shuffle(9999);
-        mCasino2Max.shuffle(9999);
+		mCasino2Max.shuffle(9999);
         mCasino3.shuffle(9999);
         mCasino3Max.shuffle(9999);
       });
-        
+      
       btnStop.addEventListener('click', () => {
         switch(count) {
           case 3:
@@ -192,6 +181,6 @@
         }
         count--;
       });
-    </script>
+          </script>
   </body>
 </html>
