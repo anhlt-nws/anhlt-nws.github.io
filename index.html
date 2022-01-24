@@ -44,13 +44,6 @@
             <div class="slot slot9"></div>
             <div class="slot slot10"></div>
           </div>
-		      <div id="casino2Max" class="slotMachine">
-            <div class="slot slot1"></div>
-            <div class="slot slot2"></div>
-            <div class="slot slot3"></div>
-            <div class="slot slot4"></div>
-            <div class="slot slot5"></div>
-          </div>
 
           <div id="casino3" class="slotMachine">
             <div class="slot slot1"></div>
@@ -63,17 +56,6 @@
             <div class="slot slot8"></div>
             <div class="slot slot9"></div>
             <div class="slot slot10"></div>
-          </div>
-		      <div id="casino3Max" class="slotMachine">
-            <div class="slot slot1"></div>
-            <div class="slot slot2"></div>
-            <div class="slot slot3"></div>
-            <div class="slot slot4"></div>
-            <div class="slot slot5"></div>
-            <div class="slot slot6"></div>
-            <div class="slot slot7"></div>
-            <div class="slot slot8"></div>
-            <div class="slot slot9"></div>
           </div>
 
           <div class="btn-group btn-group-justified" role="group">
@@ -96,9 +78,7 @@
       const btnStop = document.querySelector('#casinoStop');
       const casino1 = document.querySelector('#casino1');
       const casino2 = document.querySelector('#casino2');
-      const casino2Max = document.querySelector('#casino2Max');
       const casino3 = document.querySelector('#casino3');
-      const casino3Max = document.querySelector('#casino3Max');
       const mCasino1 = new SlotMachine(casino1, {
         active: 0,
         delay: 500
@@ -107,87 +87,70 @@
         active: 0,
         delay: 500
       });
-      const mCasino2Max = new SlotMachine(casino2Max, {
-        active: 0,
-        delay: 500
-      });
       const mCasino3 = new SlotMachine(casino3, {
-        active: 0,
-        delay: 500
-      });
-      const mCasino3Max = new SlotMachine(casino3Max, {
         active: 0,
         delay: 500
       });
     </script>
     <script id="codeScript6">
-      let first = 0;
-      let second = 0;
-      let third = 0;
-      
-      function onFirst(val) {
-        console.log('first ', val);
-        first = val;
-        if (first === 2) {
-          // Hide default slot 2
-          casino2.style.display = "none";
-        } else {
-          // Hide slot 2 alter
-          casino2Max.style.display = "none";
-        }
-      };
-      
-      function onSecond(val) {
-        console.log('sec ', val);
-        second = val;
-        if (first === 2 && second === 4) {
-          // Hide default slot 3
-          casino3.style.display = "none";
-        } else {
-          // Hide slot 3 alter
-          casino3Max.style.display = "none";
-        }
-      };
-      
-      function onThird(val) {
-        console.log('third ', val);
+      let firstNumber = 0;
+      let secondNumber = 0;
+      let thirdNumber = 0;
+      /**
+       * Using solution in here https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range 
+       */
+      function randomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
       }
-      
-      function resetView() {
-        casino2.style.display = "inline-block";
-        casino3.style.display = "inline-block";
-        casino2Max.style.display = "inline-block";
-        casino3Max.style.display = "inline-block";
-      }
-
-      function hideAlter() {
-        casino2Max.style.display = "none";
-        casino3Max.style.display = "none";
-      }
-      
+      /**
+       * Handle event click start lucky number machine
+       */
       btnShuffle.addEventListener('click', () => {
-        resetView();
-        // hideAlter();
         count = 3;
+        firstNumber = 0;
+        secondNumber = 0;
+        thirdNumber = 0;
+
         mCasino1.shuffle(9999);
         mCasino2.shuffle(9999);
-        mCasino2Max.shuffle(9999);
         mCasino3.shuffle(9999);
-        mCasino3Max.shuffle(9999);
       });
         
+      /**
+       * Handle event when click stop button 
+       * get random number on first click
+       */
       btnStop.addEventListener('click', () => {
+
         switch(count) {
           case 3:
-            mCasino1.stop(onFirst);
+            mCasino1.randomize = () => {
+              firstNumber = randomNumber(0, 2);
+              console.log(`First lucky number is: ${firstNumber}`);
+              return firstNumber;
+            }
+            mCasino1.stop();
             break;
           case 2:
-            mCasino2.stop(onSecond);
-            mCasino2Max.stop(onSecond);
+            mCasino2.randomize = () => {
+              let max = 9;
+              if (firstNumber === 2) max = 4;
+              secondNumber = randomNumber(0, max);
+              console.log(`Second lucky number is: ${secondNumber}`);
+              return secondNumber;
+            }
+            mCasino2.stop();
             break;
           case 1:
-            mCasino3.stop(onThird);
-            mCasino3Max.stop(onThird);
+            mCasino3.randomize = () => {
+              let max = 9;
+              if (firstNumber === 2 && secondNumber === 4) max = 8;
+              thirdNumber = randomNumber(0, max);
+              console.log(`Third lucky number is: ${thirdNumber}`);
+              return thirdNumber;
+            }
+            mCasino3.stop();
+            console.log(`Final Number: ${firstNumber}${secondNumber}${thirdNumber}`);
             break;
         }
         count--;
