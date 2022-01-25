@@ -307,6 +307,7 @@ header a {
   /* border-top: 20px dashed rgb(180, 75, 119); */
   background: url('../img/background.png');
   background-size: cover;
+  height: 100%;
 }
 
 #casino .content:nth-child(1) {
